@@ -128,6 +128,44 @@
       <!--Grid row-->
 
     </div>
+
+    <div class="review-body">
+      <h2>
+        Reviews
+      </h2>
+      {% if user.is_authenticated %}
+      <div class="review-form">
+        <form action="" method="post">
+          {% csrf_token %}
+          {{ review_form.as_p }}
+          <button class="btn btn-outline-blue" type="submit">Comment</button>
+        </form>
+      </div>
+        
+      
+      {% endif %}
+        {% if reviews %}
+  
+          {% for review in reviews %}
+          <div class="reviews">
+            <strong>
+              {{ review.user }}
+              {{ review.commented_on}}
+            </strong>
+            <br>
+            <span>
+              {{ review.body}}
+            </span>
+            {% empty %}
+              No Reviews Yet
+            {% endfor %}
+          </div>
+            
+      {% endif %}  
+      <br>
+    </div>
+    
+    
   </main>
   <!--Main layout-->
 

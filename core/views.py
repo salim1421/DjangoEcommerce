@@ -6,13 +6,14 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView, DetailView, View
 from django.utils import timezone
-from .forms import CheckoutForm
+from .forms import CheckoutForm, ReviewForm
 from .models import (
     Item,
     Order,
     OrderItem,
     CheckoutAddress,
-    Payment
+    Payment,
+    Review
 )
 
 import stripe
@@ -28,6 +29,24 @@ class ProductView(DetailView):
     model = Item
     template_name = "product.html"
 
+    def get_context_data(self, **kwargs):
+        context = super(ProductView, self).get_context_data(**kwargs)
+        review = Review.objects.filter(item=self.get_object())
+        if self.request.user.is_authenticated:
+            context["review_form"] = ReviewForm(instance=self.request.user)
+        
+        context['reviews'] = review
+        return context
+    
+    def post(self, request, *args, **kwargs):
+        new_review = Review(
+            user=self.request.user,
+            item=self.get_object(),
+            body=request.POST['body']
+        )
+        new_review.save()
+        return self.get(self, request, *args, **kwargs)
+    
 class OrderSummaryView(LoginRequiredMixin, View):
     def get(self, *args, **kwargs):
 

@@ -2,6 +2,7 @@ from django.conf import settings
 from django.db import models
 from django.shortcuts import reverse
 from django_countries.fields import CountryField
+from django.contrib.auth.models import User
 
 CATEGORY = (
     ('S', 'Shirt'),
@@ -108,3 +109,12 @@ class Payment(models.Model):
     def __str__(self):
         return self.user.username
     
+
+class Review(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    item = models.ForeignKey(Item, on_delete=models.PROTECT)
+    body = models.CharField(max_length=1000)
+    commented_on = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.user.username

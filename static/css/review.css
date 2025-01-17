@@ -1,0 +1,10 @@
+.review-body{
+    margin: 200px;
+}
+.review-form{
+    border: 1px solid gray;
+    width: 500px;
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
